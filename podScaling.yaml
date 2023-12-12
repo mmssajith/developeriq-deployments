@@ -17,15 +17,63 @@ spec:
       target:
         type: Utilization
         averageUtilization: 50
-status:
-  observedGeneration: 1
-  lastScaleTime: "2023-01-01T00:00:10Z"
-  currentReplicas: 1
-  desiredReplicas: 1
-  currentMetrics:
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: analytics-pod-scale
+  namespace: developeriq
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: analytics-deployment
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
   - type: Resource
     resource:
       name: cpu
-      current:
-        averageUtilization: 0
-        averageValue: 0
+      target:
+        type: Utilization
+        averageUtilization: 50
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: grafana-pod-scale
+  namespace: monitoring
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: grafana
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 90
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: prometheus-pod-scale
+  namespace: monitoring
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: prometheus
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 90
