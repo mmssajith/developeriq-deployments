@@ -38,6 +38,7 @@ jobs:
       run: |
         kubectl apply -f data-collector/deployment.yaml
         kubectl apply -f data-processor/deployment.yaml
+        kubectl apply -f persistStorage.yaml
         kubectl apply -f prometheus.yaml
         kubectl apply -f grafana.yaml
         kubectl apply -f podScaling.yaml
