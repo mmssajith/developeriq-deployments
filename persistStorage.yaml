@@ -1,14 +1,33 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: shared-pvc
+  name: grafana-storage
   namespace: monitoring
+  labels:
+    app: grafana
 spec:
   capacity:
     storage: 5Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: shared-storage-cls
+  storageClassName: grafana-storage-class
   hostPath:
-    path: /path/on/host
+    path: /data
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prometheus-storage
+  namespace: monitoring
+  labels:
+    app: prometheus
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: prometheus-storage-class
+  hostPath:
+    path: /prometheus

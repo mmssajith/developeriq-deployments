@@ -51,15 +51,15 @@ spec:
         - name: grafana-config
           mountPath: /etc/grafana
           readOnly: true
-        - name: shared-storage
+        - name: grafana-storage
           mountPath: /var/lib/grafana
       volumes:
       - name: grafana-config
         configMap:
           name: grafana-config
-      - name: shared-storage
+      - name: grafana-storage
         persistentVolumeClaim:
-          claimName: shared-pvc
+          claimName: grafana-storage-claim
 ---
 apiVersion: v1
 kind: Service
@@ -79,12 +79,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: shared-pvc
+  name: grafana-storage-claim
   namespace: monitoring
+  labels:
+    app: grafana
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: shared-storage-cls
+  storageClassName: grafana-storage-class
   resources:
     requests:
       storage: 5Gi
