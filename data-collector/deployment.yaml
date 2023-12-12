@@ -24,6 +24,12 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+        env:
+        - name: DB_URI
+          valueFrom:
+            secretKeyRef:
+              name: developeriq-secrets
+              key: DB_URI
 ---
 apiVersion: v1
 kind: Service
