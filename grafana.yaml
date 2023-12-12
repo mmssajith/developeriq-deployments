@@ -13,12 +13,40 @@ spec:
       labels:
         app: grafana
     spec:
+      securityContext:
+        fsGroup: 472
+        supplementalGroups:
+          - 0
       containers:
       - name: grafana
         image: grafana/grafana:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
+          name: http-grafana
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /robots.txt
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 3000
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 250m
+            memory: 750Mi
         volumeMounts:
         - name: grafana-config
           mountPath: /etc/grafana
@@ -40,12 +68,13 @@ metadata:
   namespace: monitoring
 spec:
   type: LoadBalancer
+  sessionAffinity: None
   selector:
     app: grafana
   ports:
     - protocol: TCP
       port: 3000
-      targetPort: 3000
+      targetPort: http-grafana
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -58,7 +87,7 @@ spec:
   storageClassName: shared-storage-cls
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: ConfigMap
