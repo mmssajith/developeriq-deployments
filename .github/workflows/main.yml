@@ -43,6 +43,7 @@ jobs:
         kubectl apply -f blue-env/analytic-blue.yaml
         kubectl apply -f blue-env/developeriqbe-blue.yaml
         kubectl apply -f green-env/developeriqbe-green.yaml
-        kubectl apply -f green-env/developeriqbe-green.yaml
+        kubectl apply -f green-env/analytic-green.yaml
         kubectl apply -f ingress.yaml
+        kubectl apply -f secret.yaml
   
