@@ -40,9 +40,9 @@ jobs:
 
     - name: Deploy
       run: |
-        kubect apply -f blue-env/analytic-blue.yaml
-        kubect apply -f blue-env/developeriqbe-blue.yaml
-        kubect apply -f green-env/developeriqbe-green.yaml
-        kubect apply -f green-env/developeriqbe-green.yaml
+        kubectl apply -f blue-env/analytic-blue.yaml
+        kubectl apply -f blue-env/developeriqbe-blue.yaml
+        kubectl apply -f green-env/developeriqbe-green.yaml
+        kubectl apply -f green-env/developeriqbe-green.yaml
         kubectl apply -f ingress.yaml
   
