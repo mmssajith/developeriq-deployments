@@ -35,8 +35,6 @@ metadata:
           ]
         }
       }
-  labels:
-    app: hello-kubernetes
 spec:
   rules:
     - http:
