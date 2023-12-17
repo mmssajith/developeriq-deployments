@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: analytics-deployment-green
-  namespace: {{K8S_NAMESPACE}}
+  namespace: developeriq
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: analytics
-        image: {{ECR_REGISTRY}}/{{ECR_REPOSITORY}}:{{IMAGE_TAG}}
+        image: 337689099048.dkr.ecr.ap-southeast-1.amazonaws.com/developeriq_be:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -35,7 +35,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: analytics-service-green
-  namespace: {{K8S_NAMESPACE}}
+  namespace: developeriq
   labels:
     app: analytics-deployment-green
 spec:
