@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: developeriq
-        image: 337689099048.dkr.ecr.ap-southeast-1.amazonaws.com/developeriq_be:latest
+        image: 337689099048.dkr.ecr.ap-southeast-1.amazonaws.com/developeriq_be:2.0.0
         imagePullPolicy: Always
         ports:
         - containerPort: 80
