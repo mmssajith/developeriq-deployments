@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: developeriq-deployment-blue
+  namespace: developeriq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: developeriq-deployment-blue
+  template:
+    metadata:
+      labels:
+        app: developeriq-deployment-blue
+    spec:
+      containers:
+      - name: developeriq
+        image: 337689099048.dkr.ecr.ap-southeast-1.amazonaws.com/developeriq_be:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+        env:
+        - name: DB_URI
+          valueFrom:
+            secretKeyRef:
+              name: developeriq-secrets
+              key: DB_URI
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: developeriq-service-blue
+  namespace: developeriq
+  labels:
+    app: developeriq-deployment-blue
+spec:
+  selector:
+    app: developeriq-deployment-blue
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP

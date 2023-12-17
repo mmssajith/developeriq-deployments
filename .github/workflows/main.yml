@@ -1,8 +1,12 @@
 name: ECR Deployment
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
 
 jobs:
   deploy:
@@ -32,11 +36,13 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
     
     - name: Update  Kube Config
-      run: aws eks update-kubeconfig --name developeriq_eks --region ap-southeast-1
+      run: aws eks update-kubeconfig --name production --region ap-southeast-1
 
     - name: Deploy
       run: |
-        kubectl apply -f secrets.yaml
-        kubectl apply -f persistStorage.yaml
+        kubect apply -f blue-env/analytic-blue.yaml
+        kubect apply -f blue-env/developeriqbe-blue.yaml
+        kubect apply -f green-env/developeriqbe-green.yaml
+        kubect apply -f green-env/developeriqbe-green.yaml
         kubectl apply -f ingress.yaml
   

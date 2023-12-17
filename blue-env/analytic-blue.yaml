@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analytics-deployment-blue
+  namespace: {{K8S_NAMESPACE}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analytics-deployment-blue
+  template:
+    metadata:
+      labels:
+        app: analytics-deployment-blue
+    spec:
+      containers:
+      - name: analytics
+        image: {{ECR_REGISTRY}}/{{ECR_REPOSITORY}}:{{IMAGE_TAG}}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 300m
+          requests:
+            cpu: 150m
+        env:
+        - name: DB_URI
+          valueFrom:
+            secretKeyRef:
+              name: developeriq-secrets
+              key: DB_URI
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: analytics-service-blue
+  namespace: {{K8S_NAMESPACE}}
+  labels:
+    app: analytics-deployment-blue
+spec:
+  selector:
+    app: analytics-deployment-blue
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
